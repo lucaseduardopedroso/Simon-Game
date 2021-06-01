@@ -5,7 +5,7 @@ var started = 0;
 var level = 0;
 
 //Check if a key has been pressed to start
-$("body").keypress(function(){
+$(document).keypress(function(){
     if(!started){
         //Change the h1 to the level
         $("#level-title").text("Level " + level);
@@ -16,14 +16,34 @@ $("body").keypress(function(){
 
 //Check the button click and store its color (id)
 $(".btn").click(function(){
-    var userChosenColour = $(this).attr('id');
+    var userChosenColour = $(this).attr("id");
     //Store the color clicked in userClickedPattern
     userClickedPattern.push(userChosenColour);
     playSound(userChosenColour);
     animatePress(userChosenColour);
+    checkAnswer(userClickedPattern.length-1);
 });
 
+function checkAnswer(currentLevel){
+    //Check if the most recent user answer is the same as the game pattern
+    if(userClickedPattern[currentLevel] === gamePattern[currentLevel]){
+        console.log("success");
+        //Check if the user finished their sequence 
+        if(userClickedPattern.length === gamePattern.length){
+            //Call the nextSequence after a 1000 millisecond delay
+            setTimeout(function(){
+                nextSequence();
+            }, 1000);
+        }
+    }
+    else{
+        console.log("wrong");
+    }
+}
+
 function nextSequence(){
+    //Reset the userClickedPattern to an empty array ready for the next level
+    userClickedPattern = [];
     //Increase a level every time nextSequence is called and chage the level title
     level++;
     $("#level-title").text("Level " + level);
@@ -33,7 +53,6 @@ function nextSequence(){
     var randomChosenColour = buttonColours[randomNumber];
     //Store the random color in the gamePattern
     gamePattern.push(randomChosenColour);
-    //Increase a level each 
     //Select the random color button and animate it
     $("#" + randomChosenColour).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
     playSound(randomChosenColour);
