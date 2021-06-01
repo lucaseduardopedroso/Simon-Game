@@ -38,6 +38,9 @@ function checkAnswer(currentLevel){
     }
     else{
         console.log("wrong");
+        gameOver("wrong");
+        startOver();
+
     }
 }
 
@@ -70,4 +73,22 @@ function animatePress(currentColour){
     setTimeout(function(){
         $("#" + currentColour).removeClass("pressed");
     }, 100);
+}
+
+function gameOver(over){
+    //Play "wrong track"
+    playSound(over);
+    //Add animation to the background
+    $("body").addClass("game-over");
+    setTimeout(function(){
+        $("body").removeClass("game-over");
+    }, 200);
+    //Change the title to Game Over
+    $("#level-title").text("Game Over, Press Any Key to Restart");
+}
+
+function startOver(){
+    level = 0;
+    gamePattern = [];
+    started = 0;
 }
